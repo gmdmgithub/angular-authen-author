@@ -1,6 +1,6 @@
-import { HttpModule } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { catchError, map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class OrderService {
@@ -9,6 +9,10 @@ export class OrderService {
   }
 
   getOrders() { 
-    return this.http.get('/api/orders');
+    console.log('get orders');
+    
+    return this.http.get('/api/orders').pipe(
+      map( orders => orders)
+    );
   }
 } 

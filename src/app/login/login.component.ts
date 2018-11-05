@@ -16,6 +16,8 @@ export class LoginComponent {
     private authService: AuthService) { }
 
   signIn(credentials) {
+    console.log('Sign in credentials',credentials);
+    
     this.authService.login(credentials)
       .subscribe(result => { 
         if (result)

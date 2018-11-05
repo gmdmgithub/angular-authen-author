@@ -1,64 +1,67 @@
-import { Http, BaseRequestOptions, Response, ResponseOptions, RequestMethod } from '@angular/http';
-import { MockBackend, MockConnection } from '@angular/http/testing';
-
-export function fakeBackendFactory(
-    backend: MockBackend, 
-    options: BaseRequestOptions) {
-        
-  let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1vc2ggSGFtZWRhbmkiLCJhZG1pbiI6dHJ1ZX0.iy8az1ZDe-_hS8GLDKsQKgPHvWpHl0zkQBqy1QIPOkA';
+import { Injectable } from '@angular/core';
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
+ 
+@Injectable()
+export class FakeBackendInterceptor implements HttpInterceptor {
     
-  backend.connections.subscribe((connection: MockConnection) => {
-    // We are using the setTimeout() function to simulate an 
-    // asynchronous call to the server that takes 1 second. 
-    setTimeout(() => {
-      //
-      // Fake implementation of /api/authenticate
-      //
-      if (connection.request.url.endsWith('/api/authenticate') &&
-        connection.request.method === RequestMethod.Post) {
-        let body = JSON.parse(connection.request.getBody());
+    
+    constructor() { }
+ 
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+      console.log("fake start", request, next);
+      
+        // array in local storage for registered users
+        let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+        
+        let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1vc2ggSGFtZWRhbmkiLCJhZG1pbiI6dHJ1ZX0.iy8az1ZDe-_hS8GLDKsQKgPHvWpHl0zkQBqy1QIPOkA';
+        // wrap in delayed observable to simulate server api call
+        return of(null).pipe(
+          
+          mergeMap(() => {
+            // authenticate
+            if (request.url.endsWith('/api/authenticate') && request.method === 'POST') {
+               
+                // find if any user matches login credentials
+                let body = request.body;
 
-        if (body.email === 'mosh@domain.com' && body.password === '1234') {
-          connection.mockRespond(new Response(
-            new ResponseOptions({
-              status: 200,
-              body: { token: token }
-           })));
-        } else {
-          connection.mockRespond(new Response(
-            new ResponseOptions({ status: 200 })
-          ));
-        }
-      }
-
-
-
-       // 
-       // Fake implementation of /api/orders
-       //
-       if (connection.request.url.endsWith('/api/orders') && 
-           connection.request.method === RequestMethod.Get) {
-         if (connection.request.headers.get('Authorization') === 'Bearer ' + token) {
-            connection.mockRespond(new Response(
-              new ResponseOptions({ status: 200, body: [1, 2, 3] })
-         ));
-       } else {
-           connection.mockRespond(new Response(
-             new ResponseOptions({ status: 401 })
-           ));
-       }
+                console.log('fake start - POST',body);
+ 
+                if (body.email === 'greg@domain.com' && body.password === '54321') {
+                    return of(new HttpResponse({ status: 200, body: {token: token} }));
+ 
+                  } else {
+                    return throwError({ error: { message: 'Username or password is incorrect' } });
+                  }
+            }
+            
+            // get orders
+            if (request.url.endsWith('/api/orders') && request.method === 'GET') {
+                // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
+                if (request.headers.get('Authorization') === 'Bearer ' + token) {
+                    return of(new HttpResponse({ status: 200, body: [1, 2, 3] }));
+                } else {
+                    // return 401 not authorised if token is null or invalid
+                    return throwError({ error: { message: 'Unauthorised' } });
+                }
+            }
+ 
+            // pass through any requests not handled above
+            return next.handle(request);
+             
+        }))
+ 
+        // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
+        .pipe(materialize())
+        .pipe(delay(500))
+        .pipe(dematerialize());
     }
-
-
-
-    }, 1000);
-  });
-
-  return new Http(backend, options);
 }
-
+ 
 export let fakeBackendProvider = {
-    provide: Http,
-    useFactory: fakeBackendFactory,
-    deps: [MockBackend, BaseRequestOptions]
+    // use fake backend in place of Http service for backend-less development
+    provide: HTTP_INTERCEPTORS,
+    useClass: FakeBackendInterceptor,
+    multi: true
 };

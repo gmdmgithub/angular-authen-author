@@ -17,6 +17,7 @@ import { BaseRequestOptions } from '@angular/http';
 import { SignupComponent } from './signup/signup.component';
 import { OrderService } from './services/order.service';
 import { AuthService } from './services/auth.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { AuthService } from './services/auth.service';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     RouterModule.forRoot( [
       { path: '', component: HomeComponent },
       { path: 'admin', component: AdminComponent },
