@@ -15,8 +15,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // array in local storage for registered users
         let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
         
-      let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1vc2ggSGFtZWRhbmkiLCJhZG1pbiI6dHJ1ZSwiZXhwIjoiMTgwNDY5OTI1NSJ9.th1wmUvkm6Xffh2tvup5k658RY1FCf2e-GFdqA5V3QM';
-        // wrap in delayed observable to simulate server api call
+        //admin
+      let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkdyZWcgTSIsImVtYWlsIjoiZ3JlZ0BleGFtcGxlLmNvbSIsImFkbWluIjp0cnVlLCJleHAiOjE4NTE1MTg1NDQsInJvbGVzIjpbIkFETUlOIiwiSFIiXSwianRpIjoiNzcxYzA2NDMtNTg1ZC00ZDZlLWE1YWYtZmRjZmQwYjQzMGFlIiwiaWF0IjoxNTQxNTE4NTQ0fQ.e2LwCBUK7CkBxp2ckjEpykBt72RSm0JPzb8_o5JtJjk";
+      //not admin
+      //let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkdyZWcgTSIsImVtYWlsIjoiZ3JlZ0BleGFtcGxlLmNvbSIsImFkbWluIjpmYWxzZSwiZXhwIjoxODUxNTE4NTQ0LCJyb2xlcyI6WyJBRE1JTiIsIkhSIl0sImp0aSI6Ijc3MWMwNjQzLTU4NWQtNGQ2ZS1hNWFmLWZkY2ZkMGI0MzBhZSIsImlhdCI6MTU0MTUxODU0NH0.AdyqN27avdMhf_Fit30BBPUnpphC5CpqNdbhe9QRCt8";
+      // wrap in delayed observable to simulate server api call
         return of(null).pipe(
           
           mergeMap(() => {

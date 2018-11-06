@@ -17,17 +17,17 @@ export class LoginComponent {
     this.authService.login(credentials).subscribe(
       (result: { token: string }) => {
         if (result) {
-          this.invalidLogin = true;
-          this.authService.validateLogin(this.invalidLogin, result.token);
+          this.invalidLogin =false;
+          this.authService.validateLogin(!this.invalidLogin, result.token);
           this.router.navigate(["/"]);
         } else {
-          this.invalidLogin = false;
-          this.authService.validateLogin(this.invalidLogin);
+          this.invalidLogin = true;
+          this.authService.validateLogin(!this.invalidLogin);
         }
       },
       error => {
-        this.invalidLogin = false;
-        this.authService.validateLogin(this.invalidLogin);
+        this.invalidLogin = true;
+        this.authService.validateLogin(!this.invalidLogin);
         console.log("Errror", error);
       }
     );
