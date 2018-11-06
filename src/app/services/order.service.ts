@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { catchError, map, tap } from "rxjs/operators";
 
 @Injectable()
 export class OrderService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) {
-  }
+  getOrders() {
+    let token = localStorage.getItem("token");
+    let headers = {
+      headers: new HttpHeaders({ Authorization: "Bearer " + token })
+    };
 
-  getOrders() { 
-    console.log('get orders');
-    
-    return this.http.get('/api/orders').pipe(
-      map( orders => orders)
-    );
+    return this.http.get("/api/orders", headers).pipe(map(orders => orders));
   }
-} 
+}

@@ -18,7 +18,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //admin
       let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkdyZWcgTSIsImVtYWlsIjoiZ3JlZ0BleGFtcGxlLmNvbSIsImFkbWluIjp0cnVlLCJleHAiOjE4NTE1MTg1NDQsInJvbGVzIjpbIkFETUlOIiwiSFIiXSwianRpIjoiNzcxYzA2NDMtNTg1ZC00ZDZlLWE1YWYtZmRjZmQwYjQzMGFlIiwiaWF0IjoxNTQxNTE4NTQ0fQ.e2LwCBUK7CkBxp2ckjEpykBt72RSm0JPzb8_o5JtJjk";
       //not admin
-      //let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkdyZWcgTSIsImVtYWlsIjoiZ3JlZ0BleGFtcGxlLmNvbSIsImFkbWluIjpmYWxzZSwiZXhwIjoxODUxNTE4NTQ0LCJyb2xlcyI6WyJBRE1JTiIsIkhSIl0sImp0aSI6Ijc3MWMwNjQzLTU4NWQtNGQ2ZS1hNWFmLWZkY2ZkMGI0MzBhZSIsImlhdCI6MTU0MTUxODU0NH0.AdyqN27avdMhf_Fit30BBPUnpphC5CpqNdbhe9QRCt8";
+      // let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkdyZWcgTSIsImVtYWlsIjoiZ3JlZ0BleGFtcGxlLmNvbSIsImFkbWluIjpmYWxzZSwiZXhwIjoxODUxNTE4NTQ0LCJyb2xlcyI6WyJBRE1JTiIsIkhSIl0sImp0aSI6Ijc3MWMwNjQzLTU4NWQtNGQ2ZS1hNWFmLWZkY2ZkMGI0MzBhZSIsImlhdCI6MTU0MTUxODU0NH0.AdyqN27avdMhf_Fit30BBPUnpphC5CpqNdbhe9QRCt8";
       // wrap in delayed observable to simulate server api call
         return of(null).pipe(
           
@@ -41,6 +41,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             
             // get orders
             if (request.url.endsWith('/api/orders') && request.method === 'GET') {
+              console.log("orders ", request.headers);
+              
                 // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
                 if (request.headers.get('Authorization') === 'Bearer ' + token) {
                     return of(new HttpResponse({ status: 200, body: [1, 2, 3] }));

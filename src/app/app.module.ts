@@ -17,6 +17,7 @@ import { OrderService } from "./services/order.service";
 import { AuthService } from "./services/auth.service";
 import { HttpClientModule } from "@angular/common/http";
 import { AuthGuard } from "./services/auth-guard.service";
+import { AdminAuthGuard } from "./services/admin-auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { AuthGuard } from "./services/auth-guard.service";
       {
         path: "admin",
         component: AdminComponent,
-        canActivate: [AuthGuard] //next parametr for access control, class AuthGaurd have to impement CanActivate interface
+        canActivate: [AuthGuard,AdminAuthGuard] //next parametr for access control, class AuthGaurd have to impement CanActivate interface
       },
       { path: "login", component: LoginComponent },
       { path: "no-access", component: NoAccessComponent },
@@ -50,6 +51,7 @@ import { AuthGuard } from "./services/auth-guard.service";
     OrderService,
     AuthGuard,
     AuthService,
+    AdminAuthGuard,
 
     // For creating a mock back-end. You don't need these in a real app.
     fakeBackendProvider,
