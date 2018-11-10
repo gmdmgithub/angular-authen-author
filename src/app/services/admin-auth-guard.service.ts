@@ -8,17 +8,17 @@ import { AuthService } from './auth.service';
 export class AdminAuthGuard implements CanActivate {
 
   constructor(
-    private router:Router,
+    private router: Router,
     private authService: AuthService
   ) { }
 
-  canActivate(){
-    let user = this.authService.currentUser;
+  canActivate() {
+    const user = this.authService.currentUser;
     // console.log('user:',user);
-    
-    if(user && user.admin) return true;
-    
-    this.router.navigate(["/no-access"]);
+
+    if (user && user.admin) { return true; }
+
+    this.router.navigate(['/no-access']);
     return false;
   }
 }

@@ -13,6 +13,6 @@ export class AdminComponent implements OnInit {
 
   ngOnInit() {
     this.orderService.getOrders()
-      .subscribe((orders:any[]) => this.orders = orders);
+      .subscribe((orders: any[]) => this.orders = orders);
   }
-} 
+}
