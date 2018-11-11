@@ -8,7 +8,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deplay:gh": "ng build --prod --base-href='https://gmdmgithub.github.io/angular-authen-author/' && ngh --dir dist/angular-authen-author"
+    "deplay:gh": "ng build --prod --base-href='https://gmdmgithub.github.io/angular-authen-author/' && ngh --dir dist/angular-authen-author",
+    "deplay:firebase": "ng build --prod && firebase deploy"
   },
   "private": true,
   "dependencies": {
